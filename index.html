@@ -20,8 +20,8 @@
 
   <!-- =======================  META  ======================= -->
   <meta charset="utf-8" />
-  <title>Analyzer — Reasoning Across Parallel Samples</title>
-  <meta name="description" content="Analyzer: a compact LLM that learns to reason across parallel samples and close the oracle-gap of test-time scaling." />
+  <title>SSA — Parallel Reasoning Sample Set Aggregator</title>
+  <meta name="description" content="SSA: a compact LLM that learns to aggregate across parallel samples set reasoningand close the oracle-gap of test-time scaling." />
   <meta name="keywords" content="large language models, reasoning, reinforcement learning, test-time scaling" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -75,7 +75,7 @@
   <section class="hero is-fullheight-with-navbar">
     <div class="hero-body is-justify-content-center is-align-items-center">
       <div class="container has-text-centered">
-        <h1 class="title is-1">Analyzer</h1>
+        <h1 class="title is-1">SSA: Sample Set Aggregator</h1>
         <h2 class="subtitle is-4">Learning to Reason Across <em>Parallel&nbsp;Samples</em> for LLM Reasoning</h2>
 
         <!-- AUTHORS INLINE -->
@@ -98,15 +98,15 @@
 
         <div class="buttons is-centered">
           <a class="button is-dark is-rounded" href="https://arxiv.org/abs/" target="_blank"><i class="ai ai-arxiv mr-1"></i>Paper</a>
-          <a class="button is-dark is-rounded" href="https://github.com/your‑org/analyzer" target="_blank"><i class="fab fa-github mr-1"></i>Code</a>
-          <a class="button is-dark is-rounded" href="https://huggingface.co/spaces/your‑org/analyzer-demo" target="_blank"><i class="fas fa-rocket mr-1"></i>Model</a>
+          <a class="button is-dark is-rounded" href="https://github.com/user074/ssa" target="_blank"><i class="fab fa-github mr-1"></i>Code</a>
+          <a class="button is-dark is-rounded" href="https://huggingface.co/spaces/your‑org/SSA-demo" target="_blank"><i class="fas fa-rocket mr-1"></i>Model</a>
         </div>
-
-        <!--  Animated teaser  -->
+        
         <figure class="mt-6">
-          <img class="teaser" src="./static/images/analyzer.gif" alt="Animated overview of the Analyzer pipeline" width="640" loading="eager" />
-          <figcaption class="is-size-7 has-text-grey">Parallel candidates → small RL‑tuned <strong>Analyzer</strong> → final answer</figcaption>
+          <img src="./static/images/SSA_arch.png" alt="Architecture diagram comparing SSA to parallel and sequential test‑time scaling" loading="lazy" style="width: 80%;" />
         </figure>
+
+
       </div>
     </div>
   </section>
@@ -118,7 +118,7 @@
   <section class="section has-background-light">
     <div class="container is-max-desktop content">
       <h2 class="title is-3">Abstract</h2>
-      <p>Scaling test‑time compute by <em>sampling</em> multiple reasoning paths yields large gains but leaves an oracle gap. We introduce <strong>Analyzer</strong>, a tiny LLM fine‑tuned with Group‑Relative PPO to read <code>k</code> candidate solutions and emit one final answer. On GSM8K, MATH, AIME‑24, AMC‑23 and OlympiadBench, Analyzer reaches <strong>56.1&nbsp;%</strong> accuracy—just <strong>3.6&nbsp;pp</strong> shy of the Pass@5 oracle—and beats 7 B process‑reward models while training on &lt;5 % of their data. The model generalises across base‑family (Qwen → Llama‑3), base‑size (7 → 32 B) and <code>k</code> without re‑tuning.</p>
+      <p>Scaling test‑time compute by <em>sampling</em> multiple reasoning paths yields large gains but leaves an oracle gap. We introduce <strong>SSA</strong>, a tiny LLM fine‑tuned with Group‑Relative PPO to read <code>k</code> candidate solutions and emit one final answer. On GSM8K, MATH, AIME‑24, AMC‑23 and OlympiadBench, SSA reaches <strong>56.1&nbsp;%</strong> accuracy—just <strong>3.6&nbsp;pp</strong> shy of the Pass@5 oracle—and beats 7 B process‑reward models while training on &lt;5 % of their data. The model generalises across base‑family (Qwen → Llama‑3), base‑size (7 → 32 B) and <code>k</code> without re‑tuning.</p>
     </div>
   </section>
 
@@ -128,12 +128,15 @@
   <section class="section">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Method at a Glance</h2>
-      <figure>
-        <img src="./static/images/Analyzer_arch.png" alt="Architecture diagram comparing Analyzer to parallel and sequential test‑time scaling" loading="lazy" />
+      <!--  Animated teaser  -->
+      <figure class="mt-6">
+        <img class="teaser" src="./static/images/SSA.gif" alt="Animated overview of the SSA pipeline" width="640" loading="eager" />
+        <figcaption class="is-size-7 has-text-grey">Parallel candidates → small RL‑tuned <strong>SSA</strong> → final answer</figcaption>
       </figure>
+
       <ul class="content">
         <li><strong>Step 1:</strong> Freeze a base LLM; sample <code>k</code> solutions.</li>
-        <li><strong>Step 2:</strong> Concatenate solutions + prompt → Analyzer (0.5–3 B).</li>
+        <li><strong>Step 2:</strong> Concatenate solutions + prompt → SSA (0.5–3 B).</li>
         <li><strong>Training:</strong> GRPO with a sparse, verifiable reward (correct / format).</li>
       </ul>
     </div>
@@ -146,13 +149,13 @@
     <div class="container is-max-desktop">
       <h2 class="title is-3">Results</h2>
       <div class="content">
-        <p><strong>Analyzer‑3B</strong> surpasses a 7 B process‑reward verifier. The same checkpoint can be plugged into frozen base models up to 32 B with no re‑tuning.</p>
+        <p><strong>SSA‑3B</strong> surpasses a 7 B process‑reward verifier. The same checkpoint can be plugged into frozen base models up to 32 B with no re‑tuning.</p>
         <p>The charts below show the average of GSM8K, MATH, AIME‑24, AMC‑23 and OlympiadBench.</p>
 
       </div>
 
       <!-- overall bar / line chart -->
-      <figure class="mb-5"><img src="./static/images/all_model_comparison.png" alt="Bar chart comparing Analyzer to parallel‑scaling baselines" loading="lazy" /></figure>
+      <figure class="mb-5"><img src="./static/images/all_model_comparison.png" alt="Bar chart comparing SSA to parallel‑scaling baselines" loading="lazy" /></figure>
 
       <!-- miniature sortable leaderboard -->
       <table class="table is-striped is-hoverable is-fullwidth" id="leaderboard">
@@ -162,15 +165,32 @@
           <tr><td class="has-text-grey">Pass@5 (oracle)</td><td>—</td><td>5</td><td>59.7</td></tr>
           <tr><td>Majority vote</td><td>—</td><td>5</td><td>49.7</td></tr>
           <tr><td>Qwen‑PRM</td><td>7 B</td><td>5</td><td>53.0</td></tr>
-          <tr class="has-background-primary-light"><td><strong>Analyzer (ours)</strong></td><td>3 B</td><td>5</td><td><strong>56.1</strong></td></tr>
+          <tr class="has-background-primary-light"><td><strong>SSA (ours)</strong></td><td>3 B</td><td>5</td><td><strong>56.1</strong></td></tr>
         </tbody>
       </table>
 
       <div class="content">
-        <p>Below we also juxtapose Analyzer‑3B with <em>sequential</em> RL models that fine‑tune the <u>entire</u> 7 B / 14 B / 32 B backbone. Despite its 10× smaller footprint, Analyzer stays within 2–3 pp accuracy with similar tokens during test time.</p>
+        <p>Below we also juxtapose SSA‑3B with <em>sequential</em> RL models that fine‑tune the <u>entire</u> 7 B / 14 B / 32 B backbone. Despite its 10× smaller footprint, SSA stays within 2–3 pp accuracy with similar tokens during test time.</p>
       </div>
-      <!-- sequential RL vs Analyzer comparison figure -->
-      <figure class="mt-5"><img src="./static/images/inference_size_comparison.png" alt="Inference‑time compute vs. accuracy: Analyzer‑3B vs sequential‑RL (7/14/32 B)" loading="lazy" /></figure>
+      <!-- sequential RL vs SSA comparison figure -->
+      <figure class="mt-5"><img src="./static/images/inference_size_comparison.png" alt="Inference‑time compute vs. accuracy: SSA‑3B vs sequential‑RL (7/14/32 B)" loading="lazy" /></figure>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!--  Discussion                                                -->
+  <!-- ========================================================= -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">Discussion</h2>
+      <div class="content">
+        <p>Key Questions:</p>
+        <ul>
+          <li><strong>Does RL optimize the output distribution?</strong> We find that we can separate the reasoning abilities out from the model weights. By plug a small SSA on top of the base model outputs, we can signficantly increase the performance just like full RL training. It is possible to view SSA as shaping the output distribution of the base model not through weights but through sampled outputs.</li>
+          <li><strong>How helpful is the thinking process?</strong> Similar to the previous works, we find that thinking process might not be helpful for the final answer in terms of benchmark performance. Is thinking necessary for the model? Probably not. But it does seem that thinking process is a bit more robust to our of domain generalization when we test it on the other tasks such as MMLU-PRO and ARC-C.</li>
+          <li><strong>Can RL learn new reasoning abilities?</strong> The more interesting part is to use the SSA on top of the truncated reasoning outputs. We find that even a small SSA can recover most of the answer even when last 10% of the reasoning process and answers are truncated. However, pure RL version is much worse than the RL+SFT version. We believe it is an interesting direction to explore stitching the reasoning processes to arrive at the final answer.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
